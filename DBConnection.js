@@ -1,8 +1,30 @@
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://admin:<password>@cluster0-wvfcv.mongodb.net/test?retryWrites=true";
-const client = new MongoClient(uri, { useNewUrlParser: true });
-client.connect(err => {
-  const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  client.close();
-});
+const mongoose = require('mongoose');
+
+//Keys for db connection
+const db = require('./config/keys').mongoURI;
+
+class Database{
+  constructor(){
+  }
+
+
+  //dbconnection ('then' called if con is successful )
+  connect(){
+    mongoose
+      .connect(db, {useNewUrlParser: true})
+      .then(() => console.log('Connection to db successful'))
+      .catch((err) => console.log(err));
+  }
+
+  disconnect(){
+    mongoose.disconnect(err => {
+      if(err) console.log(err);
+      else{
+        console.log('Disconnected');
+      }
+    })
+  }
+
+}
+
+module.exports = new Database();

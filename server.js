@@ -1,31 +1,22 @@
 const express = require('express');
 const app = express();
-const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 //Port for heroku
 const port = process.env.PORT || 8080;
 
-//Keys for db connection
-const db = require('./config/keys').mongoURI;
-
-//dbconnection (then called if con is successful )
-const connection = () => {
-    mongoose
-    .connect(db, {useNewUrlParser: true})
-    .then(() => console.log('Connection to db successful'))
-    .catch((err) => console.log(err));
-}
 //Middlewares
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 //Routes
 const user = require('./routes/api/user');
 const profile = require('./routes/api/profile');
 const post = require('./routes/api/post');
 
-app.use('/api', user);
-app.use('/api', profile);
-app.use('/api', post);
-
+app.use('/api/user', user);
+app.use('/api/profile', profile);
+app.use('/api/post', post);
 
 //Server init
 app.listen(port, () => {
